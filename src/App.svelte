@@ -1,5 +1,12 @@
 <script>
-  import { handCards, deckCards, makeDeck, drawCards } from './game.js';
+  import { 
+    handCards,
+    deckCards,
+    makeDeck,
+    drawCards,
+    selectFromDeck,
+    selectFromHand,
+  } from './game.js';
 
   let deck = makeDeck();
 
@@ -20,56 +27,92 @@
   const toggleSelected = (cards, i) => {
     cards[i].selected = !cards[i].selected;
     return cards;
-  }
+  };
+
+  const hasSelectedCards = (cards) => {
+    for (let card of cards) {
+      if (card.selected) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const unselectAll = (cards) => {
+    for (let card of cards) {
+      card.selected = false
+    }
+    return cards;
+  };
+
 </script>
 
 <main>
   <body>
     <!-- tokens: -->
-    <div id="board" style="display: block;">
+    <div id="bank" style="display: block;">
       {#each tokens as { tokenType }}
         <div class="{tokenType} token"></div>
       {/each}
     </div>
     <!-- Board: -->
-    <div id="board" style="display: block;">
+    <div id="deck" style="display: block;">
       {#each $deckCards as card, i }
         <div class="{card.cardType} card {card.selected ? 'selected' : ''}" on:click={() => {
           $deckCards = toggleSelected($deckCards, i);
+          $selectFromDeck = hasSelectedCards($deckCards);
+          console.log("$selectFromDeck", $selectFromDeck);
         }}></div>
       {/each}
     </div>
     <!-- Player's card: -->
-    <div id="playerCards">
+    <div id="handCards">
       {#each $handCards as card, i }
         <div class="{card.cardType} card {card.selected ? 'selected' : ''}" on:click={() => {
           $handCards = toggleSelected($handCards, i);
+          $selectFromHand = hasSelectedCards($handCards);
+          console.log("$selectFromHand", $selectFromHand);
         }}></div>
       {/each}
     </div> 
+    {#if ($selectFromDeck && $selectFromHand)}
+	    <button>Exchange</button>
+    {:else if ($selectFromDeck)}
+      <button>Take</button>
+    {:else if ($selectFromHand)}
+        <button>Sell</button>
+    {:else}
+      <button disabled={true}>Exchange/Take</button>
+    {/if}
+    <button on:click={() => {
+      $handCards = unselectAll($handCards);
+      $selectFromHand = false;
+      $deckCards = unselectAll($deckCards);
+      $selectFromDeck = false;
+    }}>Clear</button>
   </body>
 </main>
 
 <style>
 body {
-  background-image: radial-gradient(circle at 29% 55%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 4%,transparent 4%, transparent 44%,transparent 44%, transparent 100%),radial-gradient(circle at 85% 89%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 52%,transparent 52%, transparent 100%),radial-gradient(circle at 6% 90%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 53%,transparent 53%, transparent 64%,transparent 64%, transparent 100%),radial-gradient(circle at 35% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 6%,transparent 6%, transparent 98%,transparent 98%, transparent 100%),radial-gradient(circle at 56% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 16%,transparent 16%, transparent 23%,transparent 23%, transparent 100%),radial-gradient(circle at 42% 0%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 3%,transparent 3%, transparent 26%,transparent 26%, transparent 100%),radial-gradient(circle at 29% 28%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 75%,transparent 75%, transparent 100%),radial-gradient(circle at 77% 21%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 35%,transparent 35%, transparent 55%,transparent 55%, transparent 100%),radial-gradient(circle at 65% 91%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 46%,transparent 46%, transparent 76%,transparent 76%, transparent 100%),linear-gradient(45deg, rgb(83, 91, 235),rgb(76, 11, 174));
+  background-image: radial-gradient(circle at 29% 55%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 4%,transparent 4%, transparent 44%,transparent 44%, transparent 100%),radial-gradient(circle at 85% 89%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 52%,transparent 52%, transparent 100%),radial-gradient(circle at 6% 90%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 53%,transparent 53%, transparent 64%,transparent 64%, transparent 100%),radial-gradient(circle at 35% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 6%,transparent 6%, transparent 98%,transparent 98%, transparent 100%),radial-gradient(circle at 56% 75%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 16%,transparent 16%, transparent 23%,transparent 23%, transparent 100%),radial-gradient(circle at 42% 0%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 3%,transparent 3%, transparent 26%,transparent 26%, transparent 100%),radial-gradient(circle at 29% 28%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 51%,transparent 51%, transparent 75%,transparent 75%, transparent 100%),radial-gradient(circle at 77% 21%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 35%,transparent 35%, transparent 55%,transparent 55%, transparent 100%),radial-gradient(circle at 65% 91%, hsla(329,0%,99%,0.05) 0%, hsla(329,0%,99%,0.05) 46%,transparent 46%, transparent 76%,transparent 76%, transparent 100%),linear-gradient(45deg, rgb(3, 129, 52),rgb(40, 134, 30));
   min-height:400px;
   padding:20px;
   color:#DDDDDD;
   font-family:verdana;
 }
 
-#board, #playerCards {
-  display: block;
+#deck, #handCards, #bank {
+  display: table-row;
   clear: both;
-  width:100%;
+  height: 100%;
   min-height: 240px;
 }
 
 .selected {
   border: 5px solid;
   padding: 5px;
-  border-color: #79137e;
+  border-color: #05330d;
 }
 
 .card {

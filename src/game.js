@@ -4,6 +4,8 @@ import { shuffleArray } from "./utils.js";
 
 export let handCards = writable([]);
 export let deckCards = writable([]);
+export let selectFromDeck = writable(false);
+export let selectFromHand = writable(false);
 
 let deckParameters = {
     "diamond": 6,
