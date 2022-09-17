@@ -46,6 +46,16 @@
     return { success: true, deck: _deckCards, hand: _handCards};
   }
 
+  const updateGame = () => { 
+    let turn = playTurn($deckCards, $handCards, 0);
+    if (!turn.success) {
+      return;
+    }
+    console.log("Replacing", $handCards, turn.hand);
+    $handCards = turn.hand;
+    $deckCards = turn.deck;
+  };
+
 </script>
 
 <main>
@@ -81,35 +91,11 @@
       {/each}
     </div> 
     {#if ($selectFromDeck && $selectFromHand)}
-	    <button on:click={() => { 
-        let turn = playTurn($deckCards, $handCards, 0);
-        if (!turn.success) {
-          return;
-        }
-        console.log("Replacing", $handCards, turn.hand);
-        $handCards = turn.hand;
-        $deckCards = turn.deck;
-        }}>Exchange</button>
+	    <button on:click={() => updateGame()}>Exchange</button>
     {:else if ($selectFromDeck)}
-      <button on:click={() => { 
-        let turn = playTurn($deckCards, $handCards, 0);
-        if (!turn.success) {
-          return;
-        }
-        console.log("Replacing", $handCards, turn.hand);
-        $handCards = turn.hand;
-        $deckCards = turn.deck;
-        }}>Take</button>
+      <button on:click={() => updateGame()}>Take</button>
     {:else if ($selectFromHand)}
-        <button on:click={() => { 
-          let turn = playTurn($deckCards, $handCards, 0);
-          if (!turn.success) {
-            return;
-          }
-          console.log("Replacing", $handCards, turn.hand);
-          $handCards = turn.hand;
-          $deckCards = turn.deck;
-          }}>Sell</button>
+        <button on:click={() => updateGame()}>Sell</button>
     {:else}
       <button disabled={true}>Exchange/Take</button>
     {/if}
