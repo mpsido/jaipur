@@ -122,8 +122,7 @@ export const action = (_deckCards, _handCards, nbSelectedCamels) => {
     let selectedHand = _handCards.filter(card => card.selected);
     let remainingDeck = _deckCards.filter(card => !card.selected);
     let remainingHand = _handCards.filter(card => !card.selected);
-    const selectFromDeck = selectedDeck.length > 0;
-    const selectFromHand = selectedHand.length > 0;
+    console.log(selectFromDeck, selectFromHand)
     let putInDeck = [];
     let putInHand = [];
     let errorMsg = "";
@@ -132,15 +131,15 @@ export const action = (_deckCards, _handCards, nbSelectedCamels) => {
         type: "",
         qty: 0,
     }
-    if (selectFromDeck && selectFromHand) {
+    if (selectedDeck.length > 0 && selectedHand.length > 0) {
         [putInDeck, putInHand, errorMsg, consumedCamels] = exchange(selectedDeck, selectedHand, nbSelectedCamels);
         console.log("exchange", putInDeck, putInHand);
     }
-    else if (selectedDeck) {
+    else if (selectedDeck.length > 0) {
         [putInDeck, putInHand, errorMsg, consumedCamels] = takeFromDeck(selectedDeck, selectedHand, _handCards.length);
         console.log("takeFromDeck", putInDeck, putInHand);
     }
-    else if (selectFromHand) {
+    else if (selectedHand.length > 0) {
         [putInDeck, putInHand, errorMsg, selling] = sell(selectedDeck, selectedHand, nbSelectedCamels);
         console.log("sell", putInDeck, putInHand);
     }
