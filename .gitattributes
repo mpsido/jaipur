@@ -1,0 +1,14 @@
+public/bonus-token.png filter=lfs diff=lfs merge=lfs -text
+public/gold-card.png filter=lfs diff=lfs merge=lfs -text
+public/silver-card.png filter=lfs diff=lfs merge=lfs -text
+public/leather-token.png filter=lfs diff=lfs merge=lfs -text
+public/spice-card.png filter=lfs diff=lfs merge=lfs -text
+public/cloth-token.png filter=lfs diff=lfs merge=lfs -text
+public/gold-token.png filter=lfs diff=lfs merge=lfs -text
+public/leather-card.png filter=lfs diff=lfs merge=lfs -text
+public/camel-card.png filter=lfs diff=lfs merge=lfs -text
+public/cloth-card.png filter=lfs diff=lfs merge=lfs -text
+public/diamond-card.png filter=lfs diff=lfs merge=lfs -text
+public/diamond-token.png filter=lfs diff=lfs merge=lfs -text
+public/silver-token.png filter=lfs diff=lfs merge=lfs -text
+public/spice-token.png filter=lfs diff=lfs merge=lfs -text
