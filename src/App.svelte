@@ -52,8 +52,15 @@
       return;
     }
     console.log("Replacing", $handCards, turn.hand);
+    console.log("Replacing", $deckCards, turn.deck);
     $handCards = turn.hand;
     $deckCards = turn.deck;
+    if ($deckCards.length < 5) {
+      let extraCards = [];
+      [extraCards, deck] = drawCards(deck, 5 - $deckCards.length);
+      console.log("Add to deck", extraCards, [...turn.deck, ...extraCards]);
+      $deckCards = [...turn.deck, ...extraCards];
+    }
   };
 
 </script>
@@ -63,7 +70,7 @@
     <h1>Jaipur</h1>
     <h4>Welcome to the market</h4>
     <!-- tokens: -->
-    <div id="bank">
+    <div id="market">
       {#each $tokens as { tokenType }}
         <div class="{tokenType} token"></div>
       {/each}
@@ -118,11 +125,10 @@ body {
   font-family:verdana;
 }
 
-#deck, #handCards, #bank {
+#deck, #handCards, #market {
   display: table-row;
   clear: both;
   width: 100%;
-  min-height: 240px;
 }
 
 .selected {
