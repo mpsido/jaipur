@@ -155,6 +155,7 @@ body {
   width: 80px;
   height: 80px;
   margin: 0px;
+  float: left;
   background-repeat: none;
   background-position: middle center;
   background-position-x: 0px;
