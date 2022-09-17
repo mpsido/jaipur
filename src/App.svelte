@@ -6,6 +6,8 @@
     drawCards,
     selectFromDeck,
     selectFromHand,
+    action,
+    tokens,
   } from './game.js';
 
   let deck = makeDeck();
@@ -13,16 +15,6 @@
   [$handCards, deck] = drawCards(deck, 5);
 
   [$deckCards, deck] = drawCards(deck, 5);
-
-  let tokens = [
-    { tokenType: 'diamond-token', rupiah: 5 },
-    { tokenType: 'gold-token', rupiah: 5 },
-    { tokenType: 'silver-token', rupiah: 5 },
-    { tokenType: 'cloth-token', rupiah: 1 },
-    { tokenType: 'spice-token', rupiah: 1 },
-    { tokenType: 'leather-token', rupiah: 1 },
-    { tokenType: 'bonus-token', rupiah: 1 },
-  ];
 
   const toggleSelected = (cards, i) => {
     cards[i].selected = !cards[i].selected;
@@ -39,24 +31,36 @@
   };
 
   const unselectAll = (cards) => {
-    for (let card of cards) {
-      card.selected = false
-    }
-    return cards;
+    return cards.map(card => {return { ...card, selected: false }});
   };
+
+  const playTurn = (deckCards, handCards, nbSelectedCamels) => {
+    let [_deckCards, _handCards, errorMsg, consumedCamels, selling] = action(deckCards, handCards, nbSelectedCamels);
+    if (errorMsg != "") {
+      return { success: false, deck: [], hand: []};
+    }
+    console.log("consumedCamels", consumedCamels);
+    console.log("sale", selling);
+    console.log("_deckCards", _deckCards);
+    console.log("_handCards", _handCards);
+    return { success: true, deck: _deckCards, hand: _handCards};
+  }
 
 </script>
 
 <main>
   <body>
+    <h1>Jaipur</h1>
+    <h4>Welcome to the market</h4>
     <!-- tokens: -->
-    <div id="bank" style="display: block;">
-      {#each tokens as { tokenType }}
+    <div id="bank">
+      {#each $tokens as { tokenType }}
         <div class="{tokenType} token"></div>
       {/each}
     </div>
     <!-- Board: -->
-    <div id="deck" style="display: block;">
+    <h4>Board:</h4>
+    <div id="deck">
       {#each $deckCards as card, i }
         <div class="{card.cardType} card {card.selected ? 'selected' : ''}" on:click={() => {
           $deckCards = toggleSelected($deckCards, i);
@@ -66,6 +70,7 @@
       {/each}
     </div>
     <!-- Player's card: -->
+    <h4>Player's card:</h4>
     <div id="handCards">
       {#each $handCards as card, i }
         <div class="{card.cardType} card {card.selected ? 'selected' : ''}" on:click={() => {
@@ -76,11 +81,35 @@
       {/each}
     </div> 
     {#if ($selectFromDeck && $selectFromHand)}
-	    <button>Exchange</button>
+	    <button on:click={() => { 
+        let turn = playTurn($deckCards, $handCards, 0);
+        if (!turn.success) {
+          return;
+        }
+        console.log("Replacing", $handCards, turn.hand);
+        $handCards = turn.hand;
+        $deckCards = turn.deck;
+        }}>Exchange</button>
     {:else if ($selectFromDeck)}
-      <button>Take</button>
+      <button on:click={() => { 
+        let turn = playTurn($deckCards, $handCards, 0);
+        if (!turn.success) {
+          return;
+        }
+        console.log("Replacing", $handCards, turn.hand);
+        $handCards = turn.hand;
+        $deckCards = turn.deck;
+        }}>Take</button>
     {:else if ($selectFromHand)}
-        <button>Sell</button>
+        <button on:click={() => { 
+          let turn = playTurn($deckCards, $handCards, 0);
+          if (!turn.success) {
+            return;
+          }
+          console.log("Replacing", $handCards, turn.hand);
+          $handCards = turn.hand;
+          $deckCards = turn.deck;
+          }}>Sell</button>
     {:else}
       <button disabled={true}>Exchange/Take</button>
     {/if}
@@ -99,13 +128,14 @@ body {
   min-height:400px;
   padding:20px;
   color:#DDDDDD;
+  display: table-row;
   font-family:verdana;
 }
 
 #deck, #handCards, #bank {
   display: table-row;
   clear: both;
-  height: 100%;
+  width: 100%;
   min-height: 240px;
 }
 
@@ -130,7 +160,6 @@ body {
 
 .token {
   border-radius: 100px;
-  background-color: white;
   width: 80px;
   height: 80px;
   margin: 0px;
