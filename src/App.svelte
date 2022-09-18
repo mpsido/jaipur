@@ -34,6 +34,13 @@
     return cards.map(card => {return { ...card, selected: false }});
   };
 
+  const clearSelection = () => {
+    $handCards = unselectAll($handCards);
+    $selectFromHand = false;
+    $boardCards = unselectAll($boardCards);
+    $selectFromBoard = false;
+  };
+
   const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
     const actionResult = await action("momo", "1", {
       boardCards,
@@ -60,15 +67,8 @@
     }
     console.log("Replacing hand", $handCards, turn.hand);
     console.log("Replacing board", $boardCards, turn.board);
-    // $handCards = turn.hand;
-    // $boardCards = turn.board;
     getGame("momo").then(readGameState);
-    // if ($boardCards.length < 5) {
-      // let extraCards = [];
-      // [extraCards, board] = drawCards(board, 5 - $boardCards.length);
-      // console.log("Add to board", extraCards, [...turn.board, ...extraCards]);
-      // $boardCards = [...turn.board, ...extraCards];
-    // }
+    clearSelection();
   };
 
 </script>
@@ -117,12 +117,7 @@
     {:else}
       <button disabled={true}>Exchange/Take</button>
     {/if}
-    <button on:click={() => {
-      $handCards = unselectAll($handCards);
-      $selectFromHand = false;
-      $boardCards = unselectAll($boardCards);
-      $selectFromBoard = false;
-    }}>Clear</button>
+    <button on:click={clearSelection}>Clear</button>
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
