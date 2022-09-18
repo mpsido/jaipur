@@ -2,19 +2,19 @@
   import { 
     handCards,
     deckCards,
-    makeDeck,
-    drawCards,
     selectFromDeck,
     selectFromHand,
-    action,
     tokens,
   } from './game.js';
+  import { getGame, action } from "./helper.js";
 
-  let deck = makeDeck();
-
-  [$handCards, deck] = drawCards(deck, 5);
-
-  [$deckCards, deck] = drawCards(deck, 5);
+  const readGameState = (gameState) => {
+    console.log("gameState", gameState);
+    $deckCards = gameState.board;
+    $handCards = gameState.player1State.cards;
+  };
+  let gameStatePromise = getGame("momo");
+  gameStatePromise.then(readGameState);
 
   const toggleSelected = (cards, i) => {
     cards[i].selected = !cards[i].selected;
@@ -34,39 +34,49 @@
     return cards.map(card => {return { ...card, selected: false }});
   };
 
-  const playTurn = (deckCards, handCards, nbSelectedCamels) => {
-    let [_deckCards, _handCards, errorMsg, consumedCamels, selling] = action(deckCards, handCards, nbSelectedCamels);
-    if (errorMsg != "") {
+  const playTurn = async (deckCards, handCards, nbSelectedCamels) => {
+    const actionResult = await action("momo", "1", {
+      deckCards,
+      handCards,
+      nbSelectedCamels: 0,
+    });
+    console.log("actionResult", actionResult);
+    if (actionResult.errorMsg != "") {
       return { success: false, deck: [], hand: []};
     }
-    console.log("consumedCamels", consumedCamels);
-    console.log("sale", selling);
-    console.log("_deckCards", _deckCards);
-    console.log("_handCards", _handCards);
-    return { success: true, deck: _deckCards, hand: _handCards};
+    console.log("consumedCamels", actionResult.consumedCamels);
+    console.log("sale", actionResult.selling);
+    console.log("_deckCards", actionResult.deck);
+    console.log("_handCards", actionResult.hand);
+    return { success: true, deck: actionResult.deck, hand: actionResult.hand};
   }
 
-  const updateGame = () => { 
-    let turn = playTurn($deckCards, $handCards, 0);
+  const updateGame = async () => { 
+    let turn = await playTurn($deckCards, $handCards, 0);
+    console.log("After turn state is", turn);
     if (!turn.success) {
+      console.log("Action failure");
       return;
     }
     console.log("Replacing", $handCards, turn.hand);
     console.log("Replacing", $deckCards, turn.deck);
     $handCards = turn.hand;
     $deckCards = turn.deck;
-    if ($deckCards.length < 5) {
-      let extraCards = [];
-      [extraCards, deck] = drawCards(deck, 5 - $deckCards.length);
-      console.log("Add to deck", extraCards, [...turn.deck, ...extraCards]);
-      $deckCards = [...turn.deck, ...extraCards];
-    }
+    // if ($deckCards.length < 5) {
+      // let extraCards = [];
+      // [extraCards, deck] = drawCards(deck, 5 - $deckCards.length);
+      // console.log("Add to deck", extraCards, [...turn.deck, ...extraCards]);
+      // $deckCards = [...turn.deck, ...extraCards];
+    // }
   };
 
 </script>
 
 <main>
   <body>
+  {#await gameStatePromise}
+    <p>...waiting</p>
+  {:then gameState}
     <h1>Jaipur</h1>
     <h4>Welcome to the market</h4>
     <!-- tokens: -->
@@ -112,6 +122,9 @@
       $deckCards = unselectAll($deckCards);
       $selectFromDeck = false;
     }}>Clear</button>
+  {:catch error}
+    <p style="color: red">{error.message}</p>
+  {/await}
   </body>
 </main>
 
