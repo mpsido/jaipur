@@ -1,8 +1,8 @@
 <script>
   import { 
     handCards,
-    deckCards,
-    selectFromDeck,
+    boardCards,
+    selectFromBoard,
     selectFromHand,
     tokens,
   } from './game.js';
@@ -10,7 +10,7 @@
 
   const readGameState = (gameState) => {
     console.log("gameState", gameState);
-    $deckCards = gameState.board;
+    $boardCards = gameState.board;
     $handCards = gameState.player1State.cards;
   };
   let gameStatePromise = getGame("momo");
@@ -34,39 +34,40 @@
     return cards.map(card => {return { ...card, selected: false }});
   };
 
-  const playTurn = async (deckCards, handCards, nbSelectedCamels) => {
+  const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
     const actionResult = await action("momo", "1", {
-      deckCards,
+      boardCards,
       handCards,
       nbSelectedCamels: 0,
     });
     console.log("actionResult", actionResult);
     if (actionResult.errorMsg != "") {
-      return { success: false, deck: [], hand: []};
+      return { success: false, board: [], hand: []};
     }
     console.log("consumedCamels", actionResult.consumedCamels);
     console.log("sale", actionResult.selling);
-    console.log("_deckCards", actionResult.deck);
+    console.log("_boardCards", actionResult.board);
     console.log("_handCards", actionResult.hand);
-    return { success: true, deck: actionResult.deck, hand: actionResult.hand};
+    return { success: true, board: actionResult.board, hand: actionResult.hand};
   }
 
   const updateGame = async () => { 
-    let turn = await playTurn($deckCards, $handCards, 0);
+    let turn = await playTurn($boardCards, $handCards, 0);
     console.log("After turn state is", turn);
     if (!turn.success) {
       console.log("Action failure");
       return;
     }
-    console.log("Replacing", $handCards, turn.hand);
-    console.log("Replacing", $deckCards, turn.deck);
-    $handCards = turn.hand;
-    $deckCards = turn.deck;
-    // if ($deckCards.length < 5) {
+    console.log("Replacing hand", $handCards, turn.hand);
+    console.log("Replacing board", $boardCards, turn.board);
+    // $handCards = turn.hand;
+    // $boardCards = turn.board;
+    getGame("momo").then(readGameState);
+    // if ($boardCards.length < 5) {
       // let extraCards = [];
-      // [extraCards, deck] = drawCards(deck, 5 - $deckCards.length);
-      // console.log("Add to deck", extraCards, [...turn.deck, ...extraCards]);
-      // $deckCards = [...turn.deck, ...extraCards];
+      // [extraCards, board] = drawCards(board, 5 - $boardCards.length);
+      // console.log("Add to board", extraCards, [...turn.board, ...extraCards]);
+      // $boardCards = [...turn.board, ...extraCards];
     // }
   };
 
@@ -87,12 +88,12 @@
     </div>
     <!-- Board: -->
     <h4>Board:</h4>
-    <div id="deck">
-      {#each $deckCards as card, i }
+    <div id="board">
+      {#each $boardCards as card, i }
         <div class="{card.cardType} card {card.selected ? 'selected' : ''}" on:click={() => {
-          $deckCards = toggleSelected($deckCards, i);
-          $selectFromDeck = hasSelectedCards($deckCards);
-          console.log("$selectFromDeck", $selectFromDeck);
+          $boardCards = toggleSelected($boardCards, i);
+          $selectFromBoard = hasSelectedCards($boardCards);
+          console.log("$selectFromBoard", $selectFromBoard);
         }}></div>
       {/each}
     </div>
@@ -107,9 +108,9 @@
         }}></div>
       {/each}
     </div> 
-    {#if ($selectFromDeck && $selectFromHand)}
+    {#if ($selectFromBoard && $selectFromHand)}
 	    <button on:click={() => updateGame()}>Exchange</button>
-    {:else if ($selectFromDeck)}
+    {:else if ($selectFromBoard)}
       <button on:click={() => updateGame()}>Take</button>
     {:else if ($selectFromHand)}
         <button on:click={() => updateGame()}>Sell</button>
@@ -119,8 +120,8 @@
     <button on:click={() => {
       $handCards = unselectAll($handCards);
       $selectFromHand = false;
-      $deckCards = unselectAll($deckCards);
-      $selectFromDeck = false;
+      $boardCards = unselectAll($boardCards);
+      $selectFromBoard = false;
     }}>Clear</button>
   {:catch error}
     <p style="color: red">{error.message}</p>
@@ -138,7 +139,7 @@ body {
   font-family:verdana;
 }
 
-#deck, #handCards, #market {
+#board, #handCards, #market {
   display: table-row;
   clear: both;
   width: 100%;

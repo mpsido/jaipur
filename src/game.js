@@ -2,8 +2,8 @@
 import { writable } from 'svelte/store';
 
 export let handCards = writable([]);
-export let deckCards = writable([]);
-export let selectFromDeck = writable(false);
+export let boardCards = writable([]);
+export let selectFromBoard = writable(false);
 export let selectFromHand = writable(false);
 
 export let tokens = writable([
