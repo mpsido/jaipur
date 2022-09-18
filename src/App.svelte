@@ -249,9 +249,21 @@ body {
   background-size: 80px;
 }
 
-.bonus-token {
+.bonus5-token {
   /* background-image: url("https://static.wixstatic.com/media/59baa2_28fbe92a9aad44b7bd10acf4d741375e~mv2.png/v1/crop/x_0,y_13,w_626,h_613/fill/w_82,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/BONUS_5.png"); */
-  background-image: url("bonus-token.png");
+  background-image: url("bonus5-token.png");
+  background-size: 80px;
+}
+
+.bonus4-token {
+  /* background-image: url("https://static.wixstatic.com/media/59baa2_d45fd9fe99484a9ca815588e698854e9~mv2.png/v1/crop/x_5,y_5,w_621,h_621/fill/w_80,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/BONUS_4.png"); */
+  background-image: url("bonus4-token.png");
+  background-size: 80px;
+}
+
+.bonus3-token {
+  /* background-image: url("https://static.wixstatic.com/media/59baa2_5c7af1924dfa483c937b7869cbb41876~mv2.png/v1/fill/w_80,h_80,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/BONUS_3.png"); */
+  background-image: url("bonus3-token.png");
   background-size: 80px;
 }
 

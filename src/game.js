@@ -13,5 +13,7 @@ export let tokens = writable([
     { tokenType: 'cloth-token', rupiah: 1 },
     { tokenType: 'spice-token', rupiah: 1 },
     { tokenType: 'leather-token', rupiah: 1 },
-    { tokenType: 'bonus-token', rupiah: 1 },
+    { tokenType: 'bonus5-token', rupiah: 1 },
+    { tokenType: 'bonus4-token', rupiah: 1 },
+    { tokenType: 'bonus3-token', rupiah: 1 },
   ]);
