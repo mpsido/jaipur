@@ -10,6 +10,7 @@
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
+  let nbCamels = 0;
 
   if (gameRoom !== "") {
     const ws = connect("ws://localhost:3001", gameRoom, (event) => {
@@ -26,9 +27,11 @@
     switch (selectedPlayer) {
       case 1:
         $handCards = gameState.player1State.cards;
+        nbCamels = gameState.player1State.nbCamels;
         break;
       case 2:
         $handCards = gameState.player2State.cards;
+        nbCamels = gameState.player2State.nbCamels;
         break;
     }
   };
@@ -121,7 +124,10 @@
           console.log("$selectFromHand", $selectFromHand);
         }}></div>
       {/each}
-    </div> 
+    </div>
+    <div id="camelCards">
+      <div class="mini-camel-card herd"><h2>{nbCamels} x</h2></div>
+    </div>
     {#if ($selectFromBoard && $selectFromHand)}
 	    <button on:click={() => updateGame()}>Exchange</button>
     {:else if ($selectFromBoard)}
@@ -144,6 +150,12 @@
   width: 100%;
 }
 
+#camelCards {
+  display: table-row;
+  width: 20%;
+  background-size: 40px;
+}
+
 .selected {
   border: 5px solid;
   padding: 5px;
@@ -161,6 +173,21 @@
   background-repeat: none;
   background-position: middle center;
   border-radius: 10px;
+}
+
+
+.herd {
+  box-sizing: border-box;
+  width: 60px;
+  height: 80px;
+  margin: 10px;
+  float: right;
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: none;
+  background-position: middle center;
+  border-radius: 10px;
+  color: black;
 }
 
 .token {
@@ -215,6 +242,12 @@
   /* background-image: url("https://static.wixstatic.com/media/59baa2_867f49c8664649ff819b5228c938d628~mv2_d_1488_2079_s_2.png/v1/fill/w_136,h_182,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Jaipur_Chameau.png"); */
   background-image: url("camel-card.png");
   background-size: 150px;
+}
+
+.mini-camel-card {
+  /* background-image: url("https://static.wixstatic.com/media/59baa2_867f49c8664649ff819b5228c938d628~mv2_d_1488_2079_s_2.png/v1/fill/w_136,h_182,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Jaipur_Chameau.png"); */
+  background-image: url("camel-card.png");
+  background-size: 60px;
 }
 
 .diamond-token {
