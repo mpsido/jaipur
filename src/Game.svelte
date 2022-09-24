@@ -5,6 +5,7 @@
     selectFromBoard,
     selectFromHand,
     tokens,
+    playerTokens,
     nbSelectedCamels,
   } from './game.js';
   import { getGame, action } from "./helper.js";
@@ -41,10 +42,12 @@
       case 1:
         $handCards = gameState.player1State.cards;
         nbCamels = gameState.player1State.nbCamels;
+        $playerTokens = gameState.player1State.tokens
         break;
       case 2:
         $handCards = gameState.player2State.cards;
         nbCamels = gameState.player2State.nbCamels;
+        $playerTokens = gameState.player2State.tokens
         break;
     }
     $tokens = gameState.tokenBoard;
@@ -158,19 +161,26 @@
       <button disabled={true}>Exchange/Take</button>
     {/if}
     <button on:click={clearSelection}>Clear</button>
+    <div id="myTokens">
+      {#each Object.keys($playerTokens) as tokenType, i}
+        <div class="{tokenType} token {columns[i]}">
+          <p>{$playerTokens[tokenType]}</p>
+        </div>
+      {/each}
+    </div>
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
 
 <style>
 
-#board, #handCards, #market {
+#board, #handCards {
   display: table-row;
   clear: both;
   width: 100%;
 }
 
-#market {
+#market, #myTokens {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;

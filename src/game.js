@@ -8,3 +8,4 @@ export let selectFromHand = writable(false);
 export let nbSelectedCamels = writable(0);
 
 export let tokens = writable({});
+export let playerTokens = writable({});
