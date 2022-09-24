@@ -31,8 +31,14 @@ export const action = (gameId, player, gameAction) => {
         },
         body: actionJson,
     }).then((actionResult) => {
+        console.log("Got Action result", actionResult);
+        if (actionResult.status != 200) {
+            return actionResult.text().then(errorMsg => {
+                throw errorMsg;
+            });
+        }
         const jsonResponse = actionResult.json();
-        console.log("Got Action result", jsonResponse);
+        console.log("Got Action result (json)", jsonResponse);
         return jsonResponse;
-    }).catch(console.error);
+    });
 };

@@ -82,20 +82,26 @@
   };
 
   const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
-    const actionResult = await action(gameRoom, selectedPlayer, {
-      boardCards,
-      handCards,
-      nbSelectedCamels,
-    });
-    console.log("actionResult", actionResult);
-    if (actionResult.errorMsg != "") {
-      return { success: false, board: [], hand: []};
+    try {
+      const actionResult = await action(gameRoom, selectedPlayer, {
+        boardCards,
+        handCards,
+        nbSelectedCamels,
+      });
+      console.log("actionResult", actionResult);
+      if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
+        alert(actionResult.errorMsg);
+        return { success: false, board: [], hand: []};
+      }
+      console.log("consumedCamels", actionResult.consumedCamels);
+      console.log("sale", actionResult.selling);
+      console.log("_boardCards", actionResult.board);
+      console.log("_handCards", actionResult.hand);
+      return { success: true, board: actionResult.board, hand: actionResult.hand};
+    } catch (err) {
+      console.log("Action error", err);
+      alert(err);
     }
-    console.log("consumedCamels", actionResult.consumedCamels);
-    console.log("sale", actionResult.selling);
-    console.log("_boardCards", actionResult.board);
-    console.log("_handCards", actionResult.hand);
-    return { success: true, board: actionResult.board, hand: actionResult.hand};
   }
 
   const updateGame = async () => { 
