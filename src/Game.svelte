@@ -7,8 +7,18 @@
     tokens,
   } from './game.js';
   import { getGame, action } from "./helper.js";
+  import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
+
+  if (gameRoom !== "") {
+    const ws = connect("ws://localhost:3001", gameRoom, (event) => {
+      console.log("Received game state (before parsing)", event, event.data);
+      const gs = JSON.parse(event.data);
+      console.log("Received game state", gs);
+      readGameState(gs);
+    });
+  }
 
   const readGameState = (gameState) => {
     console.log("gameState", gameState);
@@ -76,7 +86,6 @@
     }
     console.log("Replacing hand", $handCards, turn.hand);
     console.log("Replacing board", $boardCards, turn.board);
-    getGame(gameRoom).then(readGameState);
     clearSelection();
   };
 
