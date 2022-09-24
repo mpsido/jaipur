@@ -12,6 +12,18 @@
 	export let gameRoom;
 	export let selectedPlayer;
   let nbCamels = 0;
+  const columns = [
+    "one",
+    "two",
+    "three",
+    "four",
+    "five",
+    "six",
+    "seven",
+    "eight",
+    "nine",
+    "ten",
+  ];
 
   if (gameRoom !== "") {
     const ws = connect("ws://localhost:3001", gameRoom, (event) => {
@@ -35,6 +47,7 @@
         nbCamels = gameState.player2State.nbCamels;
         break;
     }
+    $tokens = gameState.tokenBoard;
   };
   let gameStatePromise = getGame(gameRoom);
   gameStatePromise.then(readGameState);
@@ -101,8 +114,10 @@
   {:then gameState}
     <!-- tokens: -->
     <div id="market">
-      {#each $tokens as { tokenType }}
-        <div class="{tokenType} token"></div>
+      {#each Object.keys($tokens) as tokenType, i}
+        <div class="{tokenType} token {columns[i]}">
+          <p>{$tokens[tokenType]}</p>
+        </div>
       {/each}
     </div>
     <!-- Board: -->
@@ -154,6 +169,58 @@
   clear: both;
   width: 100%;
 }
+
+#market {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  grid-gap: 10px;
+  grid-auto-rows: minmax(100px, auto);
+}
+
+.one {
+  grid-column: 1 / 6;
+  grid-row: 1;
+}
+.two {
+  grid-column: 2 / 6;
+  grid-row: 1;
+}
+.three {
+  grid-column: 3 / 6;
+  grid-row: 1;
+}
+.four {
+  grid-column: 4 / 6;
+  grid-row: 1;
+}
+.five {
+  grid-column: 5 / 6;
+  grid-row: 1;
+}
+.six {
+  grid-column: 6 / 6;
+  grid-row: 1;
+}
+.seven {
+  grid-column: 1 / 6;
+  grid-row: 2;
+}
+.eigth {
+  grid-column: 2 / 6;
+  grid-row: 2;
+}
+.nine {
+  grid-column: 3 / 6;
+  grid-row: 2;
+}
+.ten {
+  grid-column: 4 / 6;
+  grid-row: 2;
+}
+
+
+
+
 
 #camelCards {
   display: table-row;
