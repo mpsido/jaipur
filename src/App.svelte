@@ -1,21 +1,26 @@
 <script>
 	import Game from './Game.svelte';
     let gameStarted = false;
-    let player = 0;
+    let selectedPlayer = 0;
+    let gameRoom = "";
 </script>
   
   <main>
     <body>
-        {#if gameStarted && player != 0 }
-            <Game/>
+        {#if gameStarted && selectedPlayer != 0 && gameRoom != "" }
+            <Game gameRoom={gameRoom} selectedPlayer={selectedPlayer}/>
         {:else}
             <h1>Jaipur</h1>
             <h4>Welcome to the market</h4>
             <label for="playerSelect"><b>Select Player:</b></label>
             <input type="number" id="playerSelect" min="1" max="2" on:input={(e) => {
-                player = parseInt(e.target.value);
+                selectedPlayer = parseInt(e.target.value);
             }}/>
-            <button disabled={player == 0} on:click={() => {
+            <label for="gameRoom"><b>Game room:</b></label>
+            <input type="string" id="gameRoom" on:input={(e) => {
+                gameRoom = e.target.value;
+            }}/>
+            <button disabled={selectedPlayer == 0 || gameRoom == ""} type="submit" on:click={() => {
                 gameStarted = true;
             }}>Start Game</button>
         {/if}

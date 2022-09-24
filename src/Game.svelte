@@ -7,13 +7,22 @@
     tokens,
   } from './game.js';
   import { getGame, action } from "./helper.js";
+	export let gameRoom;
+	export let selectedPlayer;
 
   const readGameState = (gameState) => {
     console.log("gameState", gameState);
     $boardCards = gameState.board;
-    $handCards = gameState.player1State.cards;
+    switch (selectedPlayer) {
+      case 1:
+        $handCards = gameState.player1State.cards;
+        break;
+      case 2:
+        $handCards = gameState.player2State.cards;
+        break;
+    }
   };
-  let gameStatePromise = getGame("momo");
+  let gameStatePromise = getGame(gameRoom);
   gameStatePromise.then(readGameState);
 
   const toggleSelected = (cards, i) => {
@@ -42,7 +51,7 @@
   };
 
   const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
-    const actionResult = await action("momo", "1", {
+    const actionResult = await action(gameRoom, selectedPlayer, {
       boardCards,
       handCards,
       nbSelectedCamels: 0,
@@ -67,7 +76,7 @@
     }
     console.log("Replacing hand", $handCards, turn.hand);
     console.log("Replacing board", $boardCards, turn.board);
-    getGame("momo").then(readGameState);
+    getGame(gameRoom).then(readGameState);
     clearSelection();
   };
 
