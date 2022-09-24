@@ -16,4 +16,5 @@ export let tokens = writable([
     { tokenType: 'bonus5-token', rupiah: 1 },
     { tokenType: 'bonus4-token', rupiah: 1 },
     { tokenType: 'bonus3-token', rupiah: 1 },
+    { tokenType: 'camel-token', rupiah: 5 },
   ]);

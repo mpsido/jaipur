@@ -12,3 +12,4 @@ public/diamond-card.png filter=lfs diff=lfs merge=lfs -text
 public/diamond-token.png filter=lfs diff=lfs merge=lfs -text
 public/silver-token.png filter=lfs diff=lfs merge=lfs -text
 public/spice-token.png filter=lfs diff=lfs merge=lfs -text
+public/camel-token.png filter=lfs diff=lfs merge=lfs -text

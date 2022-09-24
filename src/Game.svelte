@@ -271,4 +271,9 @@
   background-size: 80px;
 }
 
+.camel-token {
+  background-image: url("camel-token.png");
+  background-size: 80px;
+}
+
 </style>
