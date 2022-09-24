@@ -5,6 +5,7 @@
     selectFromBoard,
     selectFromHand,
     tokens,
+    nbSelectedCamels,
   } from './game.js';
   import { getGame, action } from "./helper.js";
   import { connect } from "./websocket";
@@ -61,13 +62,14 @@
     $selectFromHand = false;
     $boardCards = unselectAll($boardCards);
     $selectFromBoard = false;
+    $nbSelectedCamels = 0;
   };
 
   const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
     const actionResult = await action(gameRoom, selectedPlayer, {
       boardCards,
       handCards,
-      nbSelectedCamels: 0,
+      nbSelectedCamels,
     });
     console.log("actionResult", actionResult);
     if (actionResult.errorMsg != "") {
@@ -81,7 +83,7 @@
   }
 
   const updateGame = async () => { 
-    let turn = await playTurn($boardCards, $handCards, 0);
+    let turn = await playTurn($boardCards, $handCards, $nbSelectedCamels);
     console.log("After turn state is", turn);
     if (!turn.success) {
       console.log("Action failure");
@@ -126,7 +128,10 @@
       {/each}
     </div>
     <div id="camelCards">
-      <div class="mini-camel-card herd"><h2>{nbCamels} x</h2></div>
+      <div id="camelSelect" class="mini-camel-card herd" on:click={() => {
+        $nbSelectedCamels += 1;
+      }}><h2>{nbCamels} x</h2></div>
+      <label for="camelSelect"><b>Exchange {$nbSelectedCamels} camels</b></label>
     </div>
     {#if ($selectFromBoard && $selectFromHand)}
 	    <button on:click={() => updateGame()}>Exchange</button>
@@ -154,6 +159,7 @@
   display: table-row;
   width: 20%;
   background-size: 40px;
+  text-align: right;
 }
 
 .selected {

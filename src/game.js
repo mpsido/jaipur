@@ -5,6 +5,7 @@ export let handCards = writable([]);
 export let boardCards = writable([]);
 export let selectFromBoard = writable(false);
 export let selectFromHand = writable(false);
+export let nbSelectedCamels = writable(0);
 
 export let tokens = writable([
     { tokenType: 'diamond-token', rupiah: 5 },
