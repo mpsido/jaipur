@@ -125,7 +125,7 @@
     <div id="market">
       {#each Object.keys($tokens) as tokenType, i}
         <div class="{tokenType} token {columns[i]}">
-          <p>{$tokens[tokenType]}</p>
+          <p><b>{$tokens[tokenType]}</b></p>
         </div>
       {/each}
     </div>
@@ -170,7 +170,7 @@
     <div id="myTokens">
       {#each Object.keys($playerTokens) as tokenType, i}
         <div class="{tokenType} token {columns[i]}">
-          <p>{$playerTokens[tokenType]}</p>
+          <p><b>{$playerTokens[tokenType]}</b></p>
         </div>
       {/each}
     </div>
@@ -191,6 +191,8 @@
   grid-template-columns: repeat(6, 1fr);
   grid-gap: 10px;
   grid-auto-rows: minmax(100px, auto);
+  color: black;
+  font-style: bold;
 }
 
 .one {
