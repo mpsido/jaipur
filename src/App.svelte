@@ -5,6 +5,11 @@
     let selectedPlayer = 0;
     let gameRoom = "";
 </script>
+<svelte:head>
+  <title>Jaipur</title>
+  <meta name="robots" content="noindex nofollow" />
+  <html lang="en" />
+</svelte:head>
   
   <main>
     <body>
