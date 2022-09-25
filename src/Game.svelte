@@ -30,7 +30,7 @@
   ];
 
   if (gameRoom !== "") {
-    const ws = connect("ws://localhost:3001", gameRoom, (event) => {
+    const ws = connect("ws://localhost:3001", gameRoom, selectedPlayer, (event) => {
       console.log("Received game state (before parsing)", event, event.data);
       const gs = JSON.parse(event.data);
       console.log("Received game state", gs);
