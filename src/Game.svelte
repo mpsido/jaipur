@@ -38,18 +38,9 @@
   const readGameState = (gameState) => {
     console.log("gameState", gameState);
     $boardCards = gameState.board;
-    switch (selectedPlayer) {
-      case 1:
-        $handCards = gameState.player1State.cards;
-        nbCamels = gameState.player1State.nbCamels;
-        $playerTokens = gameState.player1State.tokens
-        break;
-      case 2:
-        $handCards = gameState.player2State.cards;
-        nbCamels = gameState.player2State.nbCamels;
-        $playerTokens = gameState.player2State.tokens
-        break;
-    }
+    $handCards = gameState.playersState[selectedPlayer - 1].cards;
+    nbCamels = gameState.playersState[selectedPlayer - 1].nbCamels;
+    $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
   };
   let gameStatePromise = getGame(gameRoom);
