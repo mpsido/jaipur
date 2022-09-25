@@ -42,6 +42,7 @@
     $nbCamels = gameState.playersState[selectedPlayer - 1].nbCamels;
     $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
+    clearSelection();
   };
   let gameStatePromise = getGame(gameRoom);
   gameStatePromise.then(readGameState);
