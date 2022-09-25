@@ -85,12 +85,23 @@
     $nbSelectedCamels = 0;
   };
 
-  const playTurn = async (boardCards, handCards, nbSelectedCamels) => {
+  const takeCamels = async () => {
+    clearSelection();
+    await playTurn(
+      $boardCards,
+      $handCards,
+      $nbSelectedCamels,
+      true,
+    );
+  }
+
+  const playTurn = async (boardCards, handCards, nbSelectedCamels, takeCamels) => {
     try {
       const actionResult = await action(gameRoom, selectedPlayer, {
         boardCards,
         handCards,
         nbSelectedCamels,
+        takeCamels,
       });
       console.log("actionResult", actionResult);
       if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
@@ -109,7 +120,7 @@
   }
 
   const updateGame = async () => { 
-    let turn = await playTurn($boardCards, $handCards, $nbSelectedCamels);
+    let turn = await playTurn($boardCards, $handCards, $nbSelectedCamels, false);
     console.log("After turn state is", turn);
     if (!turn.success) {
       console.log("Action failure");
@@ -178,6 +189,7 @@
       }}><h2>{$nbCamels} x</h2></div>
       <label for="camelSelect"><b>Exchange {$nbSelectedCamels} camels</b></label>
     </div>
+    <button on:click={takeCamels}>Take Camels</button>
     {#if ($selectFromBoard && ($selectFromHand || $nbSelectedCamels > 0))}
 	    <button on:click={() => updateGame()}>Exchange</button>
     {:else if ($selectFromBoard && (!$selectFromHand || $nbSelectedCamels == 0))}
