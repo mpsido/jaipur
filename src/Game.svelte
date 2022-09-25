@@ -9,6 +9,7 @@
     nbSelectedCamels,
     nbCamels,
     yourTurn,
+    otherPlayerHand,
   } from './game.js';
   import { getGame, action } from "./helper.js";
   import { connect } from "./websocket";
@@ -40,6 +41,7 @@
     console.log("gameState", gameState);
     $boardCards = gameState.board;
     $handCards = gameState.playersState[selectedPlayer - 1].cards;
+    $otherPlayerHand = gameState.playersState[selectedPlayer % 2].cards;
     $nbCamels = gameState.playersState[selectedPlayer - 1].nbCamels;
     $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
@@ -51,7 +53,7 @@
       Player 2 score: ${gameState.playersState[1].score}`);
     }
   };
-  let gameStatePromise = getGame(gameRoom);
+  let gameStatePromise = getGame(gameRoom, selectedPlayer);
   gameStatePromise.then(readGameState);
 
   const toggleSelected = (cards, i) => {
@@ -132,6 +134,13 @@
     {#if ($yourTurn)}
     <h2>Your turn !</h2>
     {/if}
+    <!-- Other Player's card: -->
+    <h4>Opponent's cards:</h4>
+    <div id="handCards">
+      {#each $otherPlayerHand as card }
+        <div class="{card.cardType} opponent"></div>
+      {/each}
+    </div>
     <!-- Board: -->
     <h4>Board:</h4>
     <div id="board">
@@ -271,6 +280,19 @@
   border-radius: 10px;
 }
 
+.opponent {
+  box-sizing: border-box;
+  width: 60px;
+  height: 80px;
+  margin: 10px;
+  float: right;
+  background-position-x: center;
+  background-position-y: center;
+  background-repeat: none;
+  background-position: middle center;
+  border-radius: 10px;
+  color: black;
+}
 
 .herd {
   box-sizing: border-box;
@@ -338,6 +360,11 @@
   /* background-image: url("https://static.wixstatic.com/media/59baa2_867f49c8664649ff819b5228c938d628~mv2_d_1488_2079_s_2.png/v1/fill/w_136,h_182,al_c,q_85,usm_0.66_1.00_0.01,enc_auto/Jaipur_Chameau.png"); */
   background-image: url("camel-card.png");
   background-size: 150px;
+}
+
+.jaipur-card {
+  background-image: url("jaipur-card.png");
+  background-size: 60px;
 }
 
 .mini-camel-card {
