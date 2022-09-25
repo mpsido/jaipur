@@ -161,9 +161,9 @@
     </div>
     {#if ($selectFromBoard && ($selectFromHand || $nbSelectedCamels > 0))}
 	    <button on:click={() => updateGame()}>Exchange</button>
-    {:else if ($selectFromBoard)}
+    {:else if ($selectFromBoard && (!$selectFromHand || $nbSelectedCamels == 0))}
       <button on:click={() => updateGame()}>Take</button>
-    {:else if ($selectFromHand)}
+    {:else if ($selectFromHand && !$selectFromBoard)}
         <button on:click={() => updateGame()}>Sell</button>
     {:else}
       <button disabled={true}>Exchange/Take</button>
