@@ -43,6 +43,11 @@
     $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
     clearSelection();
+    if (gameState.gameOver) {
+      alert(`Game over:
+      Player 1 score: ${gameState.playersState[0].score}
+      Player 2 score: ${gameState.playersState[1].score}`);
+    }
   };
   let gameStatePromise = getGame(gameRoom);
   gameStatePromise.then(readGameState);
