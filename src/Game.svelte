@@ -7,12 +7,12 @@
     tokens,
     playerTokens,
     nbSelectedCamels,
+    nbCamels,
   } from './game.js';
   import { getGame, action } from "./helper.js";
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
-  let nbCamels = 0;
   const columns = [
     "one",
     "two",
@@ -39,7 +39,7 @@
     console.log("gameState", gameState);
     $boardCards = gameState.board;
     $handCards = gameState.playersState[selectedPlayer - 1].cards;
-    nbCamels = gameState.playersState[selectedPlayer - 1].nbCamels;
+    $nbCamels = gameState.playersState[selectedPlayer - 1].nbCamels;
     $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
   };
@@ -144,8 +144,13 @@
     </div>
     <div id="camelCards">
       <div id="camelSelect" class="mini-camel-card herd" on:click={() => {
-        $nbSelectedCamels += 1;
-      }}><h2>{nbCamels} x</h2></div>
+        console.log("selectedPlayer", selectedPlayer, gameState.playersState[selectedPlayer - 1]);
+        if ($nbSelectedCamels < $nbCamels) {
+          $nbSelectedCamels += 1;
+          return;
+        }
+        alert("No more camels");
+      }}><h2>{$nbCamels} x</h2></div>
       <label for="camelSelect"><b>Exchange {$nbSelectedCamels} camels</b></label>
     </div>
     {#if ($selectFromBoard && $selectFromHand)}
