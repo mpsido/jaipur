@@ -1,5 +1,4 @@
-const backendUrl = "http://localhost:3000"
-
+import { backendUrl } from "./constants";
 
 export const startGame = (gameId) => {
     console.log(`Starting game with id ${gameId}`);

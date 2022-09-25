@@ -12,6 +12,7 @@
     otherPlayerHand,
     otherPlayerCamels,
   } from './game.js';
+  import { websocketUrl } from "./constants";
   import { getGame, action } from "./helper.js";
   import { connect } from "./websocket";
 	export let gameRoom;
@@ -30,7 +31,7 @@
   ];
 
   if (gameRoom !== "") {
-    const ws = connect("ws://localhost:3001", gameRoom, selectedPlayer, (event) => {
+    const ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
       console.log("Received game state (before parsing)", event, event.data);
       const gs = JSON.parse(event.data);
       console.log("Received game state", gs);
