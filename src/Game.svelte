@@ -10,6 +10,7 @@
     nbCamels,
     yourTurn,
     otherPlayerHand,
+    otherPlayerCamels,
   } from './game.js';
   import { getGame, action } from "./helper.js";
   import { connect } from "./websocket";
@@ -46,6 +47,7 @@
     $playerTokens = gameState.playersState[selectedPlayer - 1].tokens;
     $tokens = gameState.tokenBoard;
     $yourTurn = (gameState.nextPlayerPlaying == selectedPlayer);
+    $otherPlayerCamels = gameState.playersState[selectedPlayer % 2].nbCamels;
     clearSelection();
     if (gameState.gameOver) {
       alert(`Game over:
@@ -140,6 +142,7 @@
       {#each $otherPlayerHand as card }
         <div class="{card.cardType} opponent"></div>
       {/each}
+      <div id="camelSelect" class="mini-camel-card herd"><h2>{$nbCamels} x</h2></div>
     </div>
     <!-- Board: -->
     <h4>Board:</h4>
