@@ -159,7 +159,7 @@
       }}><h2>{$nbCamels} x</h2></div>
       <label for="camelSelect"><b>Exchange {$nbSelectedCamels} camels</b></label>
     </div>
-    {#if ($selectFromBoard && $selectFromHand)}
+    {#if ($selectFromBoard && ($selectFromHand || $nbSelectedCamels > 0))}
 	    <button on:click={() => updateGame()}>Exchange</button>
     {:else if ($selectFromBoard)}
       <button on:click={() => updateGame()}>Take</button>
@@ -197,6 +197,7 @@
   font-style: bold;
 }
 
+/* TODO use a css for loop for that */
 .one {
   grid-column: 1 / 6;
   grid-row: 1;
@@ -237,10 +238,6 @@
   grid-column: 4 / 6;
   grid-row: 2;
 }
-
-
-
-
 
 #camelCards {
   display: table-row;
