@@ -127,7 +127,8 @@
     <div id="market">
       {#each Object.keys($tokens) as tokenType}
         <div class="{tokenType} token">
-          <p><b>{$tokens[tokenType]}</b></p>
+          <p><b>{$tokens[tokenType].slice(0, -4)}
+            {$tokens[tokenType].slice(-4)}</b></p>
         </div>
       {/each}
     </div>
@@ -210,7 +211,7 @@
 #market, #myTokens {
   color: black;
   font-style: bold;
-  font-size: 12px;
+  font-size: 11px;
 }
 
 #camelCards {
