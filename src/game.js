@@ -13,3 +13,4 @@ export let tokens = writable({});
 export let playerTokens = writable({});
 export let nbCamels = writable(0);
 export let yourTurn = writable(false);
+export let gameOver = writable(false);

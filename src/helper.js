@@ -9,6 +9,15 @@ export const startGame = (gameId) => {
     }).catch(console.error);
 };
 
+export const restartGame = (gameId) => {
+    console.log(`Starting game with id ${gameId}`);
+    return fetch(`${backendUrl}/restart/${gameId}`).then((gameState) => {
+        const resp = gameState.text();
+        console.log("Got Game state", resp);
+        return resp;
+    }).catch(console.error);
+};
+
 export const getGame = (gameId, player) => {
     console.log(`Read game state with id ${gameId}, ${player}`);
     return fetch(`${backendUrl}/game/${gameId}/${player}`).then((gameState) => {

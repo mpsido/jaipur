@@ -11,9 +11,10 @@
     yourTurn,
     otherPlayerHand,
     otherPlayerCamels,
+    gameOver,
   } from './game.js';
   import { websocketUrl } from "./constants";
-  import { getGame, action } from "./helper.js";
+  import { getGame, action, restartGame } from "./helper.js";
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
@@ -36,8 +37,9 @@
     $tokens = gameState.tokenBoard;
     $yourTurn = (gameState.nextPlayerPlaying == selectedPlayer);
     $otherPlayerCamels = gameState.playersState[selectedPlayer % 2].nbCamels;
+    $gameOver = gameState.gameOver;
     clearSelection();
-    if (gameState.gameOver) {
+    if ($gameOver) {
       alert(`Game over:
       Player 1 score: ${gameState.playersState[0].score}
       Player 2 score: ${gameState.playersState[1].score}`);
@@ -196,6 +198,13 @@
         </div>
       {/each}
     </div>
+    {#if $gameOver}
+      <button on:click={() => {
+        restartGame(gameRoom).then(() => {
+          gameStatePromise = getGame(gameRoom, selectedPlayer).then(readGameState);
+        })
+      }}>Restart</button>
+    {/if}
   {:catch error}
     <p style="color: red">{error.message}</p>
   {/await}
