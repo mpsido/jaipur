@@ -13,11 +13,11 @@
   
   <main>
     <body>
+        <img id="jaipur-box" src="public/jaipur-box.png" alt="Jaipur"/>
         {#if gameStarted && selectedPlayer != 0 && gameRoom != "" }
             <Game gameRoom={gameRoom} selectedPlayer={selectedPlayer}/>
         {:else}
-            <h1>Jaipur</h1>
-            <h4>Welcome to the market</h4>
+            <h3>Welcome to the market</h3>
             <label for="playerSelect"><b>Select Player:</b></label>
             <input type="number" id="playerSelect" min="1" max="2" on:input={(e) => {
                 selectedPlayer = parseInt(e.target.value);
@@ -42,6 +42,11 @@
     color:#DDDDDD;
     display: table-row;
     font-family:verdana;
+  }
+
+  #jaipur-box {
+    height: 220px;
+    width: 550px;
   }
   
   </style>
