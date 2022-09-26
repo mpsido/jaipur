@@ -13,10 +13,10 @@
   
   <main>
     <body>
-        <img id="jaipur-box" src="public/jaipur-box.png" alt="Jaipur"/>
-        {#if gameStarted && selectedPlayer != 0 && gameRoom != "" }
-            <Game gameRoom={gameRoom} selectedPlayer={selectedPlayer}/>
-        {:else}
+      {#if gameStarted && selectedPlayer != 0 && gameRoom != "" }
+      <Game gameRoom={gameRoom} selectedPlayer={selectedPlayer}/>
+      {:else}
+            <img id="jaipur-box" src="public/jaipur-box.png" alt="Jaipur"/>
             <h3>Welcome to the market</h3>
             <label for="playerSelect"><b>Select Player:</b></label>
             <input type="number" id="playerSelect" min="1" max="2" on:input={(e) => {
