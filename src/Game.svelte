@@ -17,19 +17,6 @@
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
-  const columns = [
-    "one",
-    "two",
-    "three",
-    "four",
-    "five",
-    "six",
-    "seven",
-    "eight",
-    "nine",
-    "ten",
-  ];
-
   if (gameRoom !== "") {
     const ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
       console.log("Received game state (before parsing)", event, event.data);
@@ -138,8 +125,8 @@
   {:then gameState}
     <!-- tokens: -->
     <div id="market">
-      {#each Object.keys($tokens) as tokenType, i}
-        <div class="{tokenType} token {columns[i]}">
+      {#each Object.keys($tokens) as tokenType}
+        <div class="{tokenType} token">
           <p><b>{$tokens[tokenType]}</b></p>
         </div>
       {/each}
@@ -201,8 +188,8 @@
     {/if}
     <button on:click={clearSelection}>Clear</button>
     <div id="myTokens">
-      {#each Object.keys($playerTokens) as tokenType, i}
-        <div class="{tokenType} token {columns[i]}">
+      {#each Object.keys($playerTokens) as tokenType}
+        <div class="{tokenType} token">
           <p><b>{$playerTokens[tokenType]}</b></p>
         </div>
       {/each}
@@ -220,54 +207,9 @@
 }
 
 #market, #myTokens {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  grid-gap: 10px;
-  grid-auto-rows: minmax(100px, auto);
   color: black;
   font-style: bold;
-}
-
-/* TODO use a css for loop for that */
-.one {
-  grid-column: 1 / 6;
-  grid-row: 1;
-}
-.two {
-  grid-column: 2 / 6;
-  grid-row: 1;
-}
-.three {
-  grid-column: 3 / 6;
-  grid-row: 1;
-}
-.four {
-  grid-column: 4 / 6;
-  grid-row: 1;
-}
-.five {
-  grid-column: 5 / 6;
-  grid-row: 1;
-}
-.six {
-  grid-column: 6 / 6;
-  grid-row: 1;
-}
-.seven {
-  grid-column: 1 / 6;
-  grid-row: 2;
-}
-.eigth {
-  grid-column: 2 / 6;
-  grid-row: 2;
-}
-.nine {
-  grid-column: 3 / 6;
-  grid-row: 2;
-}
-.ten {
-  grid-column: 4 / 6;
-  grid-row: 2;
+  font-size: 12px;
 }
 
 #camelCards {
