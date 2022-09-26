@@ -132,6 +132,7 @@
       {/each}
     </div>
     <!-- Your turn -->
+    <h2>Player {selectedPlayer}</h2>
     {#if ($yourTurn)}
     <h2>Your turn !</h2>
     {/if}
