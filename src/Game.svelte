@@ -14,13 +14,12 @@
     gameOver,
   } from './game.js';
   import { websocketUrl } from "./constants";
-  import { action, restartGame } from "./helper.js";
+  import { getGame, action, restartGame } from "./helper.js";
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
-  let ws;
   if (gameRoom !== "") {
-    ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
+    const ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
       console.log("Received game state (before parsing)", event, event.data);
       const gs = JSON.parse(event.data);
       console.log("Received game state", gs);
@@ -36,17 +35,6 @@
         case "error":
           alert(gs.error);
           break;
-        case "gameAction":
-          const actionResult = gs.actionResult
-          console.log("actionResult", actionResult);
-          if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
-            alert(actionResult.errorMsg);
-            return { success: false, board: [], hand: []};
-          }
-          console.log("consumedCamels", actionResult.consumedCamels);
-          console.log("sale", actionResult.selling);
-          console.log("_boardCards", actionResult.board);
-          console.log("_handCards", actionResult.hand);
       }
     });
   }
@@ -69,6 +57,9 @@
       Player 2 score: ${gameState.playersState[1].score}`);
     }
   };
+  let gameStatePromise = getGame(gameRoom, selectedPlayer);
+  gameStatePromise.then(readGameState);
+
   const toggleSelected = (cards, i) => {
     cards[i].selected = !cards[i].selected;
     return cards;
@@ -97,25 +88,55 @@
 
   const takeCamels = async () => {
     clearSelection();
-    action(ws, gameRoom, selectedPlayer, {
-      boardCards: $boardCards,
-      handCards: $handCards,
-      nbSelectedCamels: $nbSelectedCamels,
-      takeCamels: true,
-    })
+    await playTurn(
+      $boardCards,
+      $handCards,
+      $nbSelectedCamels,
+      true,
+    );
   };
 
-  const updateGame = async () => {
-    action(ws, gameRoom, selectedPlayer, {
-        boardCards: $boardCards,
-        handCards: $handCards,
-        nbSelectedCamels: $nbSelectedCamels,
-        takeCamels: false,
-    });
+  const playTurn = async (boardCards, handCards, nbSelectedCamels, takeCamels) => {
+    try {
+      const actionResult = await action(gameRoom, selectedPlayer, {
+        boardCards,
+        handCards,
+        nbSelectedCamels,
+        takeCamels,
+      });
+      console.log("actionResult", actionResult);
+      if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
+        alert(actionResult.errorMsg);
+        return { success: false, board: [], hand: []};
+      }
+      console.log("consumedCamels", actionResult.consumedCamels);
+      console.log("sale", actionResult.selling);
+      console.log("_boardCards", actionResult.board);
+      console.log("_handCards", actionResult.hand);
+      return { success: true, board: actionResult.board, hand: actionResult.hand};
+    } catch (err) {
+      console.log("Action error", err);
+      alert(err);
+    }
+  }
+
+  const updateGame = async () => { 
+    let turn = await playTurn($boardCards, $handCards, $nbSelectedCamels, false);
+    console.log("After turn state is", turn);
+    if (!turn.success) {
+      console.log("Action failure");
+      return;
+    }
+    console.log("Replacing hand", $handCards, turn.hand);
+    console.log("Replacing board", $boardCards, turn.board);
     clearSelection();
   };
 
 </script>
+
+  {#await gameStatePromise}
+    <p>...waiting</p>
+  {:then gameState}
     <!-- tokens: -->
     <div id="market">
       {#each Object.keys($tokens) as tokenType}
@@ -191,9 +212,15 @@
     </div>
     {#if $gameOver}
       <button on:click={() => {
-        restartGame(ws, gameRoom);
+        restartGame(gameRoom).then(() => {
+          gameStatePromise = getGame(gameRoom, selectedPlayer).then(readGameState);
+        })
       }}>Restart</button>
     {/if}
+  {:catch error}
+    <p style="color: red">{error.message}</p>
+  {/await}
+
 <style>
 
 #board, #handCards {
