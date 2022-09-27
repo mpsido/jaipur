@@ -1,30 +1,11 @@
 import { backendUrl } from "./constants";
 
-export const startGame = (gameId) => {
-    console.log(`Starting game with id ${gameId}`);
-    return fetch(`${backendUrl}/start/${gameId}`).then((gameState) => {
-        const resp = gameState.text();
-        console.log("Got Game state", resp);
-        return resp;
-    }).catch(console.error);
+export const restartGame = (ws, gameId) => {
+    ws.send(JSON.stringify({ gameId, msgType: "restartGame" }));
 };
 
-export const restartGame = (gameId) => {
-    console.log(`Starting game with id ${gameId}`);
-    return fetch(`${backendUrl}/restart/${gameId}`).then((gameState) => {
-        const resp = gameState.text();
-        console.log("Got Game state", resp);
-        return resp;
-    }).catch(console.error);
-};
-
-export const getGame = (gameId, player) => {
-    console.log(`Read game state with id ${gameId}, ${player}`);
-    return fetch(`${backendUrl}/game/${gameId}/${player}`).then((gameState) => {
-        const jsonResponse = gameState.json();
-        console.log("Got Game state", jsonResponse);
-        return jsonResponse;
-    }).catch(console.error);
+export const getGame = (ws, gameId, selectedPlayer) => {
+    ws.send(JSON.stringify({ gameId, selectedPlayer, msgType: "gameState" }));
 };
 
 export const action = (gameId, player, gameAction) => {

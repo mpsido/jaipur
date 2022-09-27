@@ -6,7 +6,7 @@ export function connect(url, gameId, selectedPlayer, onMessage) {
     let ws = new WebSocket(url); 
     ws.onopen = (event) => {
         console.log("connected");
-        ws.send(JSON.stringify({ gameId, selectedPlayer }));
+        ws.send(JSON.stringify({ gameId, selectedPlayer, msgType: "init" }));
     };
     ws.onmessage = onMessage;
     ws.onerror = onError;

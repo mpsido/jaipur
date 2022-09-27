@@ -1,6 +1,5 @@
 <script>
 	import Game from './Game.svelte';
-    import { startGame } from './helper.js';
     let gameStarted = false;
     let selectedPlayer = 0;
     let gameRoom = "";
@@ -27,7 +26,6 @@
                 gameRoom = e.target.value;
             }}/>
             <button disabled={selectedPlayer == 0 || gameRoom == ""} type="submit" on:click={() => {
-                startGame(gameRoom);
                 gameStarted = true;
             }}>Start Game</button>
         {/if}

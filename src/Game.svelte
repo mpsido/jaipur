@@ -18,12 +18,25 @@
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
+  let ws;
   if (gameRoom !== "") {
-    const ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
+    ws = connect(websocketUrl, gameRoom, selectedPlayer, (event) => {
       console.log("Received game state (before parsing)", event, event.data);
       const gs = JSON.parse(event.data);
       console.log("Received game state", gs);
-      readGameState(gs);
+      const msgType = gs.msgType;
+      if (!msgType) {
+          console.log("msgType is missing");
+          return;
+      }
+      switch (msgType) {
+        case "gameState":
+          readGameState(gs);
+          break;
+        case "error":
+          alert(gs.error);
+          break;
+      }
     });
   }
 
@@ -45,9 +58,6 @@
       Player 2 score: ${gameState.playersState[1].score}`);
     }
   };
-  let gameStatePromise = getGame(gameRoom, selectedPlayer);
-  gameStatePromise.then(readGameState);
-
   const toggleSelected = (cards, i) => {
     cards[i].selected = !cards[i].selected;
     return cards;
@@ -121,10 +131,6 @@
   };
 
 </script>
-
-  {#await gameStatePromise}
-    <p>...waiting</p>
-  {:then gameState}
     <!-- tokens: -->
     <div id="market">
       {#each Object.keys($tokens) as tokenType}
@@ -171,7 +177,6 @@
     </div>
     <div id="camelCards">
       <div id="camelSelect" class="mini-camel-card herd" on:click={() => {
-        console.log("selectedPlayer", selectedPlayer, gameState.playersState[selectedPlayer - 1]);
         if ($nbSelectedCamels < $nbCamels) {
           $nbSelectedCamels += 1;
           return;
@@ -200,15 +205,9 @@
     </div>
     {#if $gameOver}
       <button on:click={() => {
-        restartGame(gameRoom).then(() => {
-          gameStatePromise = getGame(gameRoom, selectedPlayer).then(readGameState);
-        })
+        restartGame(ws, gameRoom);
       }}>Restart</button>
     {/if}
-  {:catch error}
-    <p style="color: red">{error.message}</p>
-  {/await}
-
 <style>
 
 #board, #handCards {
