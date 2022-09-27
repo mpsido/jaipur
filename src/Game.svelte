@@ -14,7 +14,7 @@
     gameOver,
   } from './game.js';
   import { websocketUrl } from "./constants";
-  import { getGame, action, restartGame } from "./helper.js";
+  import { action, restartGame } from "./helper.js";
   import { connect } from "./websocket";
 	export let gameRoom;
 	export let selectedPlayer;
@@ -36,6 +36,17 @@
         case "error":
           alert(gs.error);
           break;
+        case "gameAction":
+          const actionResult = gs.actionResult
+          console.log("actionResult", actionResult);
+          if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
+            alert(actionResult.errorMsg);
+            return { success: false, board: [], hand: []};
+          }
+          console.log("consumedCamels", actionResult.consumedCamels);
+          console.log("sale", actionResult.selling);
+          console.log("_boardCards", actionResult.board);
+          console.log("_handCards", actionResult.hand);
       }
     });
   }
@@ -86,47 +97,21 @@
 
   const takeCamels = async () => {
     clearSelection();
-    await playTurn(
-      $boardCards,
-      $handCards,
-      $nbSelectedCamels,
-      true,
-    );
-  }
+    action(ws, gameRoom, selectedPlayer, {
+      boardCards: $boardCards,
+      handCards: $handCards,
+      nbSelectedCamels: $nbSelectedCamels,
+      takeCamels: true,
+    })
+  };
 
-  const playTurn = async (boardCards, handCards, nbSelectedCamels, takeCamels) => {
-    try {
-      const actionResult = await action(gameRoom, selectedPlayer, {
-        boardCards,
-        handCards,
-        nbSelectedCamels,
-        takeCamels,
-      });
-      console.log("actionResult", actionResult);
-      if (!actionResult || actionResult.errorMsg === undefined || actionResult.errorMsg != "") {
-        alert(actionResult.errorMsg);
-        return { success: false, board: [], hand: []};
-      }
-      console.log("consumedCamels", actionResult.consumedCamels);
-      console.log("sale", actionResult.selling);
-      console.log("_boardCards", actionResult.board);
-      console.log("_handCards", actionResult.hand);
-      return { success: true, board: actionResult.board, hand: actionResult.hand};
-    } catch (err) {
-      console.log("Action error", err);
-      alert(err);
-    }
-  }
-
-  const updateGame = async () => { 
-    let turn = await playTurn($boardCards, $handCards, $nbSelectedCamels, false);
-    console.log("After turn state is", turn);
-    if (!turn.success) {
-      console.log("Action failure");
-      return;
-    }
-    console.log("Replacing hand", $handCards, turn.hand);
-    console.log("Replacing board", $boardCards, turn.board);
+  const updateGame = async () => {
+    action(ws, gameRoom, selectedPlayer, {
+        boardCards: $boardCards,
+        handCards: $handCards,
+        nbSelectedCamels: $nbSelectedCamels,
+        takeCamels: false,
+    });
     clearSelection();
   };
 
