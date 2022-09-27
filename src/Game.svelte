@@ -184,7 +184,8 @@
     <div id="myTokens">
       {#each Object.keys($playerTokens) as tokenType}
         <div class="{tokenType} token">
-          <p><b>{$playerTokens[tokenType]}</b></p>
+          <p><b>{$playerTokens[tokenType].slice(0, -4)}
+            {$playerTokens[tokenType].slice(-4)}</b></p>
         </div>
       {/each}
     </div>
