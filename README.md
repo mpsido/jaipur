@@ -1,48 +1,139 @@
-# Svelte + Vite
+# Jaipur
 
-This template should help get you started developing with Svelte in Vite.
+This code allows you to play the [Jaipur board game](https://en.wikipedia.org/wiki/Jaipur_\(card_game\)) online with your friends.
 
-## Recommended IDE Setup
+In order to play you need to start the frontend and the backend.
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+The backend is located in this repository: https://github.com/mpsido/jaipur-backend
 
-## Need an official Svelte framework?
+After you started the game. Both player 1 and 2 need to run their webbrowser and go the url of the frontend app: http://localhost:5173/.
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+If you are alone and just want to test the game, it is also possible to open two tabs of the same webbrowser (or a different browser) on http://localhost:5173.
 
-## Technical considerations
+## How to start the frontend
 
-**Why use this over SvelteKit?**
-
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
-  `vite dev` and `vite build` wouldn't work in a SvelteKit environment, for example.
-
-This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
-
-Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
-
-**Why `global.d.ts` instead of `compilerOptions.types` inside `jsconfig.json` or `tsconfig.json`?**
-
-Setting `compilerOptions.types` shuts out all other types not explicitly listed in the configuration. Using triple-slash references keeps the default TypeScript setting of accepting type information from the entire workspace, while also adding `svelte` and `vite/client` type information.
-
-**Why include `.vscode/extensions.json`?**
-
-Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
-
-**Why enable `checkJs` in the JS template?**
-
-It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
-
-**Why is HMR not preserving my local component state?**
-
-HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/rixo/svelte-hmr#svelte-hmr).
-
-If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
-
-```js
-// store.js
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
 ```
+git clone https://github.com/mpsido/jaipur.git
+cd jaipur
+npm start
+```
+
+## How to start the game
+
+On the main screen select if you are playing with player 1 or 2 (player 1 always plays first) and the game room.
+
+The game room is any string of characters you want.
+
+The other player has to select a different player (choose 2 if the first player is playing player 1) and the **same game room**.
+
+## How to play
+
+### The goal of the game
+
+The goal of the game is to become the richest merchant.
+
+At the end of the game the winner is the merchant who earned the most rupees by selling merchandise.
+
+### Definitions
+
+**Board**: the cards in the middle visible by the two players
+
+**Deck** : the cards of the pile that were not distributed in the game yet.
+
+**Herd**: each player has a "herd" it is a stack of camel cards that do not count as cards in the hand. Each player can however use the camels of the herd as exchange currency when he is playing the "exchange" action.
+
+### What you see on the screen
+
+The top of the screen shows the values of the tokens that no player has obtained yet. For bonus tokens, it only shows the number of bonus tokens left.
+
+Next, On the top you see how many cards your opponent has in his hands as well as how many camels he has.
+
+On the middle you see the cards layed on the table: visible by both players
+
+On the bottom you see your own cards and your herd of camels.
+
+In the bottom of the screen you see the tokens that you have already obtained.
+
+### When it is your turn
+
+At every turn a player can perform one of the four possible actions:
+* "**take camels**" the player takes all the camels in his hand and on the board and puts them in his herd
+* "**exchange**" cards (can exchange as many cards as he want, one card for one card)
+* "**take**" cards (take maxium 3 cards)
+* "**sell**" merchandise
+
+### Take camels
+
+The player takes all the camels in his hand and on the board and puts them in his herd
+
+### Exchange cards
+
+You can exchange the cards in your hand or camels in your herd for the cards on the board.
+
+One card for one card no matter what card it is. Be careful however you still cannot exceed 7 cards in your hand after the exchange !
+
+### Take cards
+
+You select up to three cards (1, 2 or 3) and they appear in your hand.
+
+You cannot have more than 7 cards in your hand.
+
+### Sell merchandise
+
+You can only sell one type of merchandise but you can sell as many as you have in your hand.
+
+When you sell merchandise you exchange each card you sell for one token of that category. The values of the token in rupees are visible at the top of the screen.
+
+### Merchandise tokens
+
+Each merchandise type corresponds to a merchandise token.
+
+The values of those tokens in rupees are visible on the top the screen. Each merchandise you sell gives you one token. Those token are picked by decreasing order of their value.
+
+At the beginning of the game the best tokens are (decresing value):
+* diamond
+* gold
+* silver
+* cloth
+* spice
+* leather
+
+But as players sell merchandise and take the corresponding tokens the remaining token values may change that order of value. So make sure you check the values of the remaining tokens on the top of the screen.
+
+### Bonus tokens
+
+Bonus are tokens that are worth some extra rupees under certain conditions.
+
+**Camel bonus**: at the end of the game, the player who has the highest number of camels in his herd gets that bonus token worth 5 rupees
+
+Selling bonus tokens:
+
+- **3 merchandise bonus**: when selling 3 merchandises of the same type in one **sell** action the player earns one of those token. The token is randomly picked among the bonus tokens of that category not taken already.
+- **4 merchandise bonus**: when selling 4 merchandises of the same type in one **sell** action the player earns one of those token. The token is randomly picked among the bonus tokens of that category not taken already.
+- **5 or more merchandise bonus**: when selling 5 or more merchandises of the same type in one **sell** action the player earns one of those token. The token is randomly picked among the bonus tokens of that category not taken already.
+
+### Game end
+
+The game ends when:
+* there are no more cards in the deck to fill the board with 5 cards
+* when three types of merchandise are sold out (no more tokens to exchange for that merchandise)
+
+## Some information to help you read the code
+
+This frontend has been coded using "Svelte" framework. If you are not familiar with it have a look at their documentation: https://svelte.dev/ and their tutorial: https://svelte.dev/tutorial/basics
+
+
+* The welcome screen (where you select your player and game room) source code is in `App.svelte` file.
+* The game screen (where you spend most of your time while you are playing the game) source code is in `Game.svelte` file.
+* The functions that make REST API calls to the backend are in `helper.js`
+* There is a websocket connection between the backend and the frontend: this is how each player's screen gets updated when the other player has played. The websocket message contains a structure with the "game state" that is read in `readGameState` function (`Game.svelte`).
+
+
+## Do you have questions ?
+
+If you have a question or suggestion you can reach out to me using this google form:
+
+https://forms.gle/GMY2s6KimeTjMw5e8
+
+
+
