@@ -129,6 +129,34 @@ This frontend has been coded using "Svelte" framework. If you are not familiar w
 * There is a websocket connection between the backend and the frontend: this is how each player's screen gets updated when the other player has played. The websocket message contains a structure with the "game state" that is read in `readGameState` function (`Game.svelte`).
 
 
+## Do you want to participate ?
+
+Here are a few things that could help a lot if you want to contribute or exercise with this project.
+
+Some of those questions involve changes in both the backend and the frontend.
+
+In any case, please make a merge request and fill the form here  https://forms.gle/GMY2s6KimeTjMw5e8 to email me your remarks and questions.
+
+
+#### Easy questions:
+
+* can you display the current score of each player on the screen
+* can you display the number of cards left on the deck
+* you can only see the number of bonus tokens left. Can you display the values of the remaining bonus tokens
+* at the end of the game there is a button to restart the game, but you cannot change which player you are. Can you update the code in such a way that players can switch their side
+
+
+#### Intermediate questions
+
+* can you update the code to save the game state in a redis database (you can add a docker-compose.yml file to run the redis database locally)
+* at the end of the game there is a button to restart the game, but you cannot change which player you are. Can you update the code in such a way that players can switch their side
+* can you encrypt the communication between the frontend and the backend using wss (websocket with SSL encryption)
+
+
+#### Advanced questions:
+* right now there is no protection of any sort can you configure user access management using [auth0](https://auth0.com/). Document in a markdown file all the necessary configuration steps on auth0.
+* at the moment anyone can claim to be any player on any game room (and can see the cards in the hand of the opponent). Can you update the code in such a way that once a game room has a player connected he has a unique session token that identifies him (you can use a system of unguessable random id generation). Only the player with that token can connect to that room with that player id. Warning ! Keep in mind that after a game is over in a game room you may want to switch which player you are
+
 ## Do you have questions ?
 
 If you have a question or suggestion you can reach out to me using this google form:
