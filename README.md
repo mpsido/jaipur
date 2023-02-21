@@ -151,11 +151,14 @@ In any case, please make a merge request and fill the form here  https://forms.g
 * can you update the code to save the game state in a redis database (you can add a docker-compose.yml file to run the redis database locally)
 * at the end of the game there is a button to restart the game, but you cannot change which player you are. Can you update the code in such a way that players can switch their side
 * can you encrypt the communication between the frontend and the backend using wss (websocket with SSL encryption)
+* can you make the game frontend compatible to phone screens
 
 
 #### Advanced questions:
+
 * right now there is no protection of any sort can you configure user access management using [auth0](https://auth0.com/). Document in a markdown file all the necessary configuration steps on auth0.
 * at the moment anyone can claim to be any player on any game room (and can see the cards in the hand of the opponent). Can you update the code in such a way that once a game room has a player connected he has a unique session token that identifies him (you can use a system of unguessable random id generation). Only the player with that token can connect to that room with that player id. Warning ! Keep in mind that after a game is over in a game room you may want to switch which player you are
+* in order to make communication more compact (and faster) between frontend and backend: can you compress the information in the game state structure. Consider using a binary buffer: https://protobuf.dev/
 
 ## Do you have questions ?
 
